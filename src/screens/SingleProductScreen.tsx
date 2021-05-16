@@ -4,7 +4,7 @@ import React, { useContext, useEffect, useState } from 'react'
 import { Image, ScrollView, StyleSheet, Text, TextInput, View } from 'react-native'
 import GreenButton from '../components/GreenButton'
 import { ProductsContext } from '../context/ProductsContext'
-import useCategories from '../hooks/useCategories'
+import {useCategories} from '../hooks/useCategories'
 import { useForm } from '../hooks/useForm'
 import { ProductStackParams } from '../navigator/ProductsNavigator'
 import { formColor, loginStyles, selectColor } from '../theme/LoginTheme'
@@ -12,27 +12,25 @@ import { formColor, loginStyles, selectColor } from '../theme/LoginTheme'
 interface Props extends StackScreenProps<ProductStackParams, 'SingleProductScreen'> { }
 
 const SingleProductScreen = ({ navigation, route }: Props) => {
-  const { id = '', name = '',} = route.params;
+  const { id = '', name = '', } = route.params;
   const { categories } = useCategories();
-  const { loadProductById } = useContext(ProductsContext)
-  const { _id, nombre, setFormValue, categoriaId, img, form, onChange } = useForm({
+  const { loadProductById, addProduct, updateProduct } = useContext(ProductsContext)
+  const { _id, nombre, categoriaId, img, onChange, setFormValue } = useForm({
     _id: id,
     categoriaId: '',
     nombre: name,
     img: ''
   })
-  
+
   useEffect(() => {
     navigation.setOptions({
       title: nombre ? nombre : 'New Product'
-    })
-  }, [nombre])
+    });
+  }, [nombre]);
 
   useEffect(() => {
     loadProduct();
-  }, [categoriaId])
-  
-
+  }, [categoriaId]);
 
   const loadProduct = async () => {
     if (id.length === 0) return;
@@ -42,51 +40,57 @@ const SingleProductScreen = ({ navigation, route }: Props) => {
       categoriaId: product.categoria._id,
       img: product.img || '',
       nombre
-    })    
+    })
   }
 
-  const saveOrUpdate = () => {
+  const saveOrUpdate = async () => {
     if (id.length > 0) {
-      console.log('update');
+      updateProduct(categoriaId, nombre, id);
     } else {
-      console.log('create');
+      const tempCategoryId = categoriaId || categories[0]._id
+      const newProduct = await addProduct(tempCategoryId, nombre);
+      onChange(newProduct._id, '_id');
     }
   }
 
   return (
     <View style={styles.container}>
-      <ScrollView>
+      <ScrollView
+        showsVerticalScrollIndicator={false}
+      >
         <TextInput
           value={nombre}
           onChangeText={value => onChange(value, 'nombre')}
-          placeholder="New Product"
+          placeholder="Product Name"
           placeholderTextColor={selectColor}
           style={styles.textInput}
         />
         <Picker
           selectedValue={categoriaId}
-          onValueChange={(value) => onChange(value, 'categoriaId')
-          }
+          onValueChange={(value) => onChange(value, 'categoriaId')}
         >
           {
-            categories && categories.map(c => (
-              <Picker.Item label={c.nombre} value={c._id} key={c._id} />
+            categories.map(c => (
+              <Picker.Item
+                label={c.nombre}
+                value={c._id}
+                key={c._id}
+              />
             ))
           }
 
         </Picker>
-        { 
+        {
           (img.length) > 0 && (
-            <Image source={{uri: img}} style={{width: '100%', height: 200}}/>
+            <Image source={{ uri: img }} style={{ width: '100%', height: 200 }} />
           )
         }
-        <Text>{JSON.stringify(form, null, 5)}</Text>
-        <View style={{marginBottom: 25}}>
-          <GreenButton
 
+        <View style={{ marginBottom: 25 }}>
+          <GreenButton
             func={saveOrUpdate}
             title="Save Product" />
-          { _id.length > 0 && (
+          {_id.length > 0 && (
             <>
               <GreenButton
                 func={() => console.log("Camera")}

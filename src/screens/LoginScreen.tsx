@@ -7,7 +7,7 @@ import GreenButton from '../components/GreenButton'
 import WhiteLogo from '../components/WhiteLogo'
 import { AuthContext } from '../context/AuthContext'
 import { useForm } from '../hooks/useForm'
-import { buttonColor, loginStyles, selectColor } from '../theme/LoginTheme'
+import { loginStyles, selectColor } from '../theme/LoginTheme'
 
 interface Props extends StackScreenProps<any, any> { }
 

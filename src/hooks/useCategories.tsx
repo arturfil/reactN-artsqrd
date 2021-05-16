@@ -1,22 +1,25 @@
-import React, { useEffect, useState } from 'react'
-import coffeeApi from '../api/Api';
-import { CategoriesResponse, Category } from '../interfaces/AppInterfaces';
+import { useEffect, useState } from "react"
+import coffeeApi from "../api/Api";
+import { CategoriesResponse, Category } from "../interfaces/AppInterfaces";
 
-const useCategories = () => {
-  const [isLoading, setIsLoading] = useState(true);
-  const [categories, setCategories] = useState<Category[]>();
-  
+
+export const useCategories = () => {
+
+  const [isLoading, setIsLoading] = useState(true)
+  const [categories, setCategories] = useState<Category[]>([]);
+
   useEffect(() => {
     getCategories();
-  }) 
-  
+  }, [])
+
   const getCategories = async () => {
-    const response = await coffeeApi.get<CategoriesResponse>('/categorias');
-    setCategories(response.data.categorias);
+    const resp = await coffeeApi.get<CategoriesResponse>('/categorias');
+    setCategories(resp.data.categorias);
     setIsLoading(false);
   }
 
-  return {categories, isLoading};
+  return {
+    isLoading,
+    categories
+  }
 }
-
-export default useCategories

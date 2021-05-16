@@ -5,7 +5,7 @@ import { Product, ProductsResponse } from '../interfaces/Products';
 type ProductsContextProps = {
   products: Product[];
   loadProducts: () => Promise<void>;
-  addProduct: (categoryId: string, productName: string) => Promise<void>;
+  addProduct: (categoryId: string, productName: string) => Promise<Product>;
   updateProduct: (categoryId: string, productName: string, productId: string) => Promise<void>;
   deleteProduct: (id: string) => Promise<void>;
   loadProductById: (id: string) => Promise<Product>;
@@ -26,8 +26,25 @@ export const ProductsProvider = ({children}: any) => {
     setProducts([...response.data.productos]);
   };
 
-  const addProduct = async (categoryId: string, productName: string) => {};
-  const updateProduct = async (categoryId: string, productName: string, productId: string) => {};
+  const addProduct = async (categoryId: string, productName: string): Promise<Product> => {
+    const response = await coffeeApi.post<Product>('/productos', {
+      nombre: productName,
+      categoria: categoryId
+    });
+    setProducts([...products, response.data])
+    return response.data;
+  };
+
+  const updateProduct = async (categoryId: string, productName: string, productId: string) => {
+    const response = await coffeeApi.put<Product>(`/productos/${productId}`, {
+      nombre: productName,
+      categoria: categoryId
+    })
+    setProducts(products.map(product => 
+      product._id === productId ? response.data : product
+    ));
+  };
+  
   const deleteProduct = async (id: string) => {};
   
   const loadProductById = async (id: string): Promise<Product> => {
