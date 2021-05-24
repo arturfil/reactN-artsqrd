@@ -1,13 +1,13 @@
 import React, { createContext, useEffect, useReducer } from "react";
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import coffeeApi from "../api/Api";
-import { LoginPayload, LoginResponse, RegisterPayload, Usuario } from "../interfaces/AppInterfaces";
+import { LoginPayload, LoginResponse, RegisterPayload, User } from "../interfaces/AppInterfaces";
 import { authReducer, AuthState } from "./AuthReducer";
 
 type AuthContextProps = {
   errorMessage: string;
   token: string | null;
-  user: Usuario | null;
+  user: User | null;
   status: 'checking' | 'authenticated' | 'not-authenticated';
   signUp: (registerPayload: RegisterPayload) => void;
   signIn: (loginPayload: LoginPayload) => void;

@@ -82,3 +82,4 @@ const LoginScreen = ({ navigation }: Props) => {
 }
 
 export default LoginScreen
+

@@ -2,9 +2,11 @@ import { StackScreenProps } from '@react-navigation/stack'
 import React, { useContext, useEffect, useState } from 'react'
 import { Dimensions, FlatList, Image, RefreshControl, StatusBar, StyleSheet, Text, View } from 'react-native'
 import { TouchableOpacity } from 'react-native-gesture-handler'
+import Icon from 'react-native-vector-icons/Ionicons'
 import { ProductsContext } from '../context/ProductsContext'
 import { ProductStackParams } from '../navigator/ProductsNavigator'
-import { buttonColor } from '../theme/LoginTheme'
+import { tabHeight } from '../theme/Constants'
+import { buttonColor, selectColor } from '../theme/LoginTheme'
 
 const cols = 2;
 const WIDTH = Dimensions.get('window').width;
@@ -21,7 +23,8 @@ const ProductsScreen = ({ navigation }: Props) => {
           onPress={() => navigation.navigate('SingleProductScreen', {})}
           activeOpacity={0.8}
         >
-          <Text style={{ marginRight: 20 }}>Agregar</Text>
+          {/* <Text style={{ marginRight: 20 }}>Agregar</Text> */}
+          <Icon style={{marginRight: 20}} name="add-circle" color={selectColor} size={30} />
         </TouchableOpacity>
       )
     })
@@ -53,7 +56,6 @@ const ProductsScreen = ({ navigation }: Props) => {
             <Text style={styles.productName} >
               {item.nombre}
             </Text>
-            {/* Try to get the single image here */}
           </TouchableOpacity>
         )}
         refreshControl={
@@ -73,6 +75,7 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     paddingHorizontal: 4,
+    marginBottom: tabHeight,
   },
   productConatiner: {
     padding: 12,

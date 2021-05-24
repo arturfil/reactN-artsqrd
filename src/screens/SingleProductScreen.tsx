@@ -1,7 +1,9 @@
+import React, { useContext, useEffect, useState } from 'react'
+import { Dimensions, Image, ScrollView, StyleSheet, Text, TextInput, View } from 'react-native'
 import { Picker } from '@react-native-picker/picker'
 import { StackScreenProps } from '@react-navigation/stack'
-import React, { useContext, useEffect, useState } from 'react'
-import { Image, ScrollView, StyleSheet, Text, TextInput, View } from 'react-native'
+import { launchCamera, launchImageLibrary } from 'react-native-image-picker';
+
 import GreenButton from '../components/GreenButton'
 import { ProductsContext } from '../context/ProductsContext'
 import {useCategories} from '../hooks/useCategories'
@@ -12,9 +14,11 @@ import { formColor, loginStyles, selectColor } from '../theme/LoginTheme'
 interface Props extends StackScreenProps<ProductStackParams, 'SingleProductScreen'> { }
 
 const SingleProductScreen = ({ navigation, route }: Props) => {
+  const win = Dimensions.get('window');
+  const [tempUri, setTempUri] = useState<string>();
   const { id = '', name = '', } = route.params;
   const { categories } = useCategories();
-  const { loadProductById, addProduct, updateProduct } = useContext(ProductsContext)
+  const { loadProductById, addProduct, updateProduct, uploadImage, deleteProduct } = useContext(ProductsContext)
   const { _id, nombre, categoriaId, img, onChange, setFormValue } = useForm({
     _id: id,
     categoriaId: '',
@@ -53,6 +57,36 @@ const SingleProductScreen = ({ navigation, route }: Props) => {
     }
   }
 
+  const takePhoto = () => {
+    launchCamera({
+      mediaType: 'photo',
+      quality: 0.5,
+    }, response => {
+      if (response.didCancel) return;
+      if (!response.uri) return;
+      setTempUri(response.uri);
+      uploadImage(response, _id);
+    });
+  }
+
+  const chooseFromGallery = () => {
+    launchImageLibrary({
+      mediaType: 'photo',
+      quality: 0.5,
+    }, response => {
+      if (response.didCancel) return;
+      if (!response.uri) return;
+      setTempUri(response.uri);
+      uploadImage(response, _id);
+    });
+  }
+
+  const removeProduct = () => {
+    const productToDelete = deleteProduct(id);
+    navigation.navigate('ProductsScreen');
+    return productToDelete
+  }
+
   return (
     <View style={styles.container}>
       <ScrollView
@@ -81,11 +115,23 @@ const SingleProductScreen = ({ navigation, route }: Props) => {
 
         </Picker>
         {
-          (img.length) > 0 && (
-            <Image source={{ uri: img }} style={{ width: '100%', height: 200 }} />
+          (img.length) > 0 && !tempUri && (
+            <Image source={{ uri: img }} style={{ 
+              flex: 1, width: win.width, height: win.height/4, alignItems: "stretch"
+            }} />
           )
         }
-
+        {
+          tempUri && (
+            <Image source={{ uri: tempUri}} style={{ width: '100%', height: 400 }} />
+          )
+        }
+        {
+          img.length < 0 && (
+            <Text>Loading Image...</Text>
+          )
+        }
+        
         <View style={{ marginBottom: 25 }}>
           <GreenButton
             func={saveOrUpdate}
@@ -93,11 +139,14 @@ const SingleProductScreen = ({ navigation, route }: Props) => {
           {_id.length > 0 && (
             <>
               <GreenButton
-                func={() => console.log("Camera")}
+                func={takePhoto}
                 title="Camara" />
               <GreenButton
-                func={() => console.log("Gallery")}
+                func={chooseFromGallery}
                 title="Gallery" />
+              <GreenButton
+                func={removeProduct}
+                title="Eliminate" />
             </>
           )
 
@@ -112,7 +161,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     marginTop: 10,
-    marginHorizontal: 20
+    marginHorizontal: 20,
   },
   productText: {
     marginTop: 10,
@@ -133,3 +182,4 @@ const styles = StyleSheet.create({
 })
 
 export default SingleProductScreen
+
