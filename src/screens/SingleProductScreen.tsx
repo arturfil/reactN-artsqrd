@@ -6,7 +6,7 @@ import { launchCamera, launchImageLibrary } from 'react-native-image-picker';
 
 import GreenButton from '../components/GreenButton'
 import { ProductsContext } from '../context/ProductsContext'
-import {useCategories} from '../hooks/useCategories'
+import { useCategories } from '../hooks/useCategories'
 import { useForm } from '../hooks/useForm'
 import { ProductStackParams } from '../navigator/ProductsNavigator'
 import { formColor, loginStyles, selectColor } from '../theme/LoginTheme'
@@ -116,14 +116,14 @@ const SingleProductScreen = ({ navigation, route }: Props) => {
         </Picker>
         {
           (img.length) > 0 && !tempUri && (
-            <Image source={{ uri: img }} style={{ 
-              flex: 1, width: win.width, height: win.height/4, alignItems: "stretch"
+            <Image source={{ uri: img }} style={{
+              flex: 1, width: win.width, height: win.height / 4, alignItems: "stretch"
             }} />
           )
         }
         {
           tempUri && (
-            <Image source={{ uri: tempUri}} style={{ width: '100%', height: 400 }} />
+            <Image source={{ uri: tempUri }} style={{ width: '100%', height: 400 }} />
           )
         }
         {
@@ -131,25 +131,25 @@ const SingleProductScreen = ({ navigation, route }: Props) => {
             <Text>Loading Image...</Text>
           )
         }
-        
+
         <View style={{ marginBottom: 25 }}>
           <GreenButton
             func={saveOrUpdate}
             title="Save Product" />
-          {_id.length > 0 && (
-            <>
-              <GreenButton
-                func={takePhoto}
-                title="Camara" />
-              <GreenButton
-                func={chooseFromGallery}
-                title="Gallery" />
-              <GreenButton
-                func={removeProduct}
-                title="Eliminate" />
-            </>
-          )
-
+          {
+            _id.length > 0 && (
+              <>
+                <GreenButton
+                  func={takePhoto}
+                  title="Camara" />
+                <GreenButton
+                  func={chooseFromGallery}
+                  title="Gallery" />
+                <GreenButton
+                  func={removeProduct}
+                  title="Eliminate" />
+              </>
+            )
           }
         </View>
       </ScrollView>
