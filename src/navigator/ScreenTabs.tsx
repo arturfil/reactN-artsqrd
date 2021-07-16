@@ -21,12 +21,14 @@ const ScreenTabs = () => {
         labelStyle: {
           marginBottom: 10
         },
-        showLabel: false,
+        showLabel: true,
         style: {
           position: 'absolute',
           height: tabHeight,
-          elevation: 0,
-          borderTopWidth: 0,
+          elevation: 5,
+          paddingTop: 10,
+          borderTopWidth: 0.5,
+          borderTopColor: 'lightgrey',
           backgroundColor: 'white'
         }
       }}
@@ -36,7 +38,6 @@ const ScreenTabs = () => {
         component={ProductsNavigator}
         options={{
           tabBarLabel: "Piezas",
-
           tabBarIcon: ({ color }) => <Icon name="home" color={color} size={30} />
         }}
       />

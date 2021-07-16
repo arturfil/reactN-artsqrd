@@ -5,18 +5,15 @@ import { buttonColor } from '../theme/LoginTheme';
 
 const ProtectedScreen = () => {
 
-  const {user, token, logOut} = useContext(AuthContext);
+  const { user, token, logOut } = useContext(AuthContext);
 
   return (
     <View style={styles.container}>
-      <StatusBar backgroundColor={buttonColor}/>
+      <StatusBar backgroundColor={buttonColor} />
       <Text style={styles.title}>Protected</Text>
-      <Button onPress={logOut} title="Logout" color="#5856D6"/>
+      <Button onPress={logOut} title="Logout" color="#5856D6" />
       <Text>
-        {JSON.stringify(user, null, 5)}
-      </Text>
-      <Text>
-        {token}
+        {user?.nombre}
       </Text>
     </View>
   )

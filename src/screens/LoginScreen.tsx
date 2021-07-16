@@ -24,7 +24,7 @@ const LoginScreen = ({ navigation }: Props) => {
   }, [errorMessage])
 
   const onLogin = () => {
-    console.log({ email, password });
+    // console.log({ email, password });
     signIn({ correo: email, password });
     Keyboard.dismiss()
   }

@@ -1,7 +1,7 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from 'axios';
 
-// const baseURL = 'http://192.168.56.1:8080/api' 
+// const baseURL = 'http:avgallerie.com/api' 
 const baseURL = 'https://products-backen.herokuapp.com/api';
 
 const coffeeApi = axios.create({baseURL});
